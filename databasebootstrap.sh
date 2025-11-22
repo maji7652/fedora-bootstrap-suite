@@ -1,14 +1,14 @@
 #!/bin/bash
-# Database Bootstrap Script - installs MySQL, PostgreSQL, SQLite, and tools
+# Database Bootstrap Script - installs MySQL, PostgreSQL, SQLite, and tools (Fedora/RHEL version)
 
 set -e
 
 [ "$EUID" -ne 0 ] && echo "Run as root or with sudo" && exit 1
 
 install_mysql() {
-    apt-get update
-    apt-get install -y mysql-server mysql-client
-    systemctl enable --now mysql
+    dnf -y update
+    dnf -y install mysql-server
+    systemctl enable --now mysqld
     mysql -e "DELETE FROM mysql.user WHERE User='';" || true
     mysql -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost','127.0.0.1','::1');" || true
     mysql -e "DROP DATABASE IF EXISTS test;" || true
@@ -17,17 +17,18 @@ install_mysql() {
 }
 
 install_postgresql() {
-    apt-get install -y postgresql postgresql-contrib
+    dnf -y install postgresql-server postgresql-contrib
+    postgresql-setup --initdb --unit postgresql || true
     systemctl enable --now postgresql
 }
 
 install_sqlite() {
-    apt-get install -y sqlite3 libsqlite3-dev
+    dnf -y install sqlite sqlite-devel
 }
 
 install_db_tools() {
-    apt-get install -y php php-mysql php-mbstring php-zip php-gd php-json php-curl
-    [ -n "$DISPLAY" ] && apt-get install -y mysql-workbench
+    dnf -y install php php-mysqlnd php-mbstring php-zip php-gd php-json php-curl
+    [ -n "$DISPLAY" ] && dnf -y install mysql-workbench
 }
 
 main() {
@@ -39,4 +40,3 @@ main() {
 }
 
 [ "${BASH_SOURCE[0]}" == "$0" ] && main "$@"
- 
