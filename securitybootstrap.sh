@@ -1,48 +1,21 @@
 #!/bin/bash
-
-# Security Bootstrap Script
-# This script configures security settings and installs security tools
+# Security Bootstrap Script (Fedora/RHEL concise)
 
 set -e
+[ "$EUID" -ne 0 ] && echo "Run as root or with sudo" && exit 1
 
-echo "Starting Security Bootstrap..."
+dnf -y update
 
-# Function to check if running as root
-check_root() {
-    if [ "$EUID" -ne 0 ]; then 
-        echo "Please run as root or with sudo"
-        exit 1
-    fi
-}
+# Firewall
+dnf -y install firewalld
+systemctl enable --now firewalld
+firewall-cmd --set-default-zone=drop
+firewall-cmd --permanent --zone=drop --add-service=ssh
+firewall-cmd --reload
 
-# Configure firewall
-configure_firewall() {
-    echo "Configuring firewall..."
-    
-    # Install UFW (Uncomplicated Firewall)
-    apt-get install -y ufw
-    
-    # Set default policies
-    ufw default deny incoming
-    ufw default allow outgoing
-    
-    # Allow SSH
-    ufw allow ssh
-    
-    # Enable firewall
-    ufw --force enable
-    
-    echo "Firewall configured successfully"
-}
-
-# Install and configure fail2ban
-install_fail2ban() {
-    echo "Installing fail2ban..."
-    
-    apt-get install -y fail2ban
-    
-    # Create local configuration
-    cat > /etc/fail2ban/jail.local <<EOF
+# Fail2ban
+dnf -y install fail2ban
+cat > /etc/fail2ban/jail.local <<EOF
 [DEFAULT]
 bantime = 3600
 findtime = 600
@@ -51,79 +24,25 @@ maxretry = 5
 [sshd]
 enabled = true
 port = ssh
-logpath = /var/log/auth.log
+logpath = /var/log/secure
 EOF
-    
-    # Start and enable fail2ban
-    systemctl start fail2ban
-    systemctl enable fail2ban
-    
-    echo "fail2ban installed successfully"
-}
+systemctl enable --now fail2ban
 
-# Secure SSH configuration
-secure_ssh() {
-    echo "Securing SSH configuration..."
-    
-    # Backup original config
-    cp /etc/ssh/sshd_config /etc/ssh/sshd_config.backup
-    
-    # Update SSH configuration
-    sed -i 's/#PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
-    sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
-    sed -i 's/#PubkeyAuthentication yes/PubkeyAuthentication yes/' /etc/ssh/sshd_config
-    
-    # Restart SSH service
-    systemctl restart sshd
-    
-    echo "SSH secured successfully"
-}
+# Secure SSH
+cp /etc/ssh/sshd_config /etc/ssh/sshd_config.backup
+sed -i 's/#PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
+sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+sed -i 's/#PubkeyAuthentication yes/PubkeyAuthentication yes/' /etc/ssh/sshd_config
+systemctl restart sshd
 
-# Install security tools
-install_security_tools() {
-    echo "Installing security tools..."
-    
-    apt-get install -y \
-        rkhunter \
-        chkrootkit \
-        lynis \
-        clamav \
-        clamav-daemon
-    
-    # Update ClamAV signatures with error handling
-    systemctl stop clamav-freshclam || true
-    freshclam --quiet || echo "Warning: freshclam update failed, will retry on next scheduled update"
-    systemctl start clamav-freshclam
-    
-    echo "Security tools installed successfully"
-}
+# Security tools
+dnf -y install rkhunter chkrootkit lynis clamav clamav-update
+systemctl stop clamav-freshclam || true
+freshclam --quiet || echo "Warning: freshclam update failed"
+systemctl start clamav-freshclam || true
 
-# Configure automatic security updates
-configure_auto_updates() {
-    echo "Configuring automatic security updates..."
-    
-    apt-get install -y unattended-upgrades apt-listchanges
-    
-    # Enable automatic updates non-interactively
-    DEBIAN_FRONTEND=noninteractive dpkg-reconfigure -plow unattended-upgrades
-    
-    echo "Automatic updates configured successfully"
-}
+# Auto updates
+dnf -y install dnf-automatic
+systemctl enable --now dnf-automatic.timer
 
-# Main execution
-main() {
-    check_root
-    
-    configure_firewall
-    install_fail2ban
-    secure_ssh
-    install_security_tools
-    configure_auto_updates
-    
-    echo "Security bootstrap completed successfully!"
-}
-
-# Run main function if script is executed directly
-if [ "${BASH_SOURCE[0]}" == "${0}" ]; then
-    main "$@"
-fi
+echo "Security bootstrap completed!"
