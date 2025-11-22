@@ -1,18 +1,16 @@
 #!/bin/bash
-
-# Network Bootstrap Script
+# Network Bootstrap Script (Fedora/RHEL version)
 # This script configures networking and installs network tools
-
 
 set -e
 [ "$EUID" -ne 0 ] && echo "Run as root or with sudo" && exit 1
 
 install_network_tools() {
-    apt-get update
-    apt-get install -y \
-        net-tools dnsutils traceroute tcpdump nmap netcat iptables iptables-persistent \
+    dnf -y update
+    dnf -y install \
+        net-tools bind-utils traceroute tcpdump nmap nmap-ncat iptables \
         bridge-utils ethtool iftop nethogs speedtest-cli \
-        curl wget mtr whois arp nmcli iwconfig tracepath hping3 socat ss
+        curl wget mtr whois iproute NetworkManager-wifi wireless-tools iputils hping3 socat iproute
 }
 
 # this enables port forwarding for ipv4 and ipv6
@@ -23,13 +21,12 @@ install_network_tools() {
 # }
 
 install_apache() {
-    apt-get install -y apache2
-    a2enmod rewrite ssl
-    systemctl enable --now apache2
+    dnf -y install httpd
+    systemctl enable --now httpd
 }
 
 install_nginx() {
-    apt-get install -y nginx
+    dnf -y install nginx
     systemctl enable --now nginx
 }
 
