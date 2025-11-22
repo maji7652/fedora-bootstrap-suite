@@ -1,100 +1,37 @@
 #!/bin/bash
-
-# Package Bootstrap Script
-# This script installs common packages and tools
+# Fedora/RHEL Package Bootstrap Script
 
 set -e
+[ "$EUID" -ne 0 ] && echo "Run as root or with sudo" && exit 1
 
-echo "Starting Package Bootstrap..."
+dnf -y update
 
-# Function to check if running as root
-check_root() {
-    if [ "$EUID" -ne 0 ]; then 
-        echo "Please run as root or with sudo"
-        exit 1
-    fi
-}
+# Dev tools
+dnf -y groupinstall "Development Tools"
+dnf -y install git curl wget vim nano htop tmux screen net-tools openssh-server
 
-# Update system packages
-update_system() {
-    echo "Updating system packages..."
-    
-    apt-get update
-    apt-get upgrade -y
-    apt-get dist-upgrade -y
-    
-    echo "System updated successfully"
-}
+# Languages
+dnf -y install python3 python3-pip python3-virtualenv golang gcc-c++
 
-# Install essential development tools
-install_dev_tools() {
-    echo "Installing development tools..."
-    
-    apt-get install -y build-essential git curl wget vim nano \
-        htop tmux screen net-tools openssh-server
-    
-    echo "Development tools installed successfully"
-}
+# Node.js (Fedora module, then add TypeScript globally)
+dnf -y module install nodejs:18
+npm install -g typescript
 
-# Install programming languages
-install_languages() {
-    echo "Installing programming languages..."
-    
-    # Python
-    apt-get install -y python3 python3-pip python3-venv
-    
-    # Node.js and npm - using NodeSource repository safely
-    if [ ! -f /tmp/nodesource_setup.sh ]; then
-        curl -fsSL https://deb.nodesource.com/setup_lts.x -o /tmp/nodesource_setup.sh
-        chmod +x /tmp/nodesource_setup.sh
-    fi
-    bash /tmp/nodesource_setup.sh
-    apt-get install -y nodejs
-    rm -f /tmp/nodesource_setup.sh
-    
-    # Java
-    apt-get install -y default-jdk default-jre
-    
-    # Go
-    apt-get install -y golang-go
-    
-    echo "Programming languages installed successfully"
-}
+# Terraform (from HashiCorp repo)
+dnf -y install dnf-plugins-core
+dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
+dnf -y install terraform
 
-# Install system utilities
-install_utilities() {
-    echo "Installing system utilities..."
-    
-    apt-get install -y unzip zip tar gzip bzip2 \
-        tree jq bc file rsync
-    
-    echo "System utilities installed successfully"
-}
+# Containers & automation
+dnf -y install podman docker-compose ansible
 
-# Clean up package cache
-cleanup() {
-    echo "Cleaning up..."
-    
-    apt-get autoremove -y
-    apt-get autoclean -y
-    
-    echo "Cleanup completed"
-}
+# Build tools
+dnf -y install make cmake
 
-# Main execution
-main() {
-    check_root
-    
-    update_system
-    install_dev_tools
-    install_languages
-    install_utilities
-    cleanup
-    
-    echo "Package bootstrap completed successfully!"
-}
+# Utilities
+dnf -y install unzip zip tar gzip bzip2 tree jq bc file rsync
 
-# Run main function if script is executed directly
-if [ "${BASH_SOURCE[0]}" == "${0}" ]; then
-    main "$@"
-fi
+dnf -y autoremove
+dnf -y clean all
+
+echo "Package bootstrap completed!"
