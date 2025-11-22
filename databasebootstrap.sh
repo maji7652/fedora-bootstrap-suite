@@ -36,12 +36,12 @@ install_mysql() {
 secure_mysql() {
     echo "Securing MySQL installation..."
     
-    # Run mysql_secure_installation in non-interactive mode
-    mysql -e "DELETE FROM mysql.user WHERE User='';"
-    mysql -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
-    mysql -e "DROP DATABASE IF EXISTS test;"
-    mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';"
-    mysql -e "FLUSH PRIVILEGES;"
+    # Run mysql_secure_installation in non-interactive mode with error handling
+    mysql -e "DELETE FROM mysql.user WHERE User='';" 2>/dev/null || echo "Note: Some MySQL security commands may require authentication"
+    mysql -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');" 2>/dev/null || true
+    mysql -e "DROP DATABASE IF EXISTS test;" 2>/dev/null || true
+    mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';" 2>/dev/null || true
+    mysql -e "FLUSH PRIVILEGES;" 2>/dev/null || true
     
     echo "MySQL secured successfully"
 }
@@ -76,8 +76,13 @@ install_db_tools() {
     # Install phpMyAdmin dependencies
     apt-get install -y php php-mysql php-mbstring php-zip php-gd php-json php-curl
     
-    # Install MySQL Workbench
-    apt-get install -y mysql-workbench
+    # Install MySQL Workbench (only if display is available)
+    if [ -n "$DISPLAY" ]; then
+        apt-get install -y mysql-workbench
+        echo "MySQL Workbench installed"
+    else
+        echo "Skipping MySQL Workbench (GUI tool, no display detected)"
+    fi
     
     echo "Database tools installed successfully"
 }

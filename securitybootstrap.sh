@@ -90,8 +90,10 @@ install_security_tools() {
         clamav \
         clamav-daemon
     
-    # Update ClamAV signatures
-    freshclam
+    # Update ClamAV signatures with error handling
+    systemctl stop clamav-freshclam || true
+    freshclam --quiet || echo "Warning: freshclam update failed, will retry on next scheduled update"
+    systemctl start clamav-freshclam
     
     echo "Security tools installed successfully"
 }
@@ -102,8 +104,8 @@ configure_auto_updates() {
     
     apt-get install -y unattended-upgrades apt-listchanges
     
-    # Enable automatic updates
-    dpkg-reconfigure -plow unattended-upgrades
+    # Enable automatic updates non-interactively
+    DEBIAN_FRONTEND=noninteractive dpkg-reconfigure -plow unattended-upgrades
     
     echo "Automatic updates configured successfully"
 }

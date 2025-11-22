@@ -42,9 +42,9 @@ install_network_tools() {
 configure_network() {
     echo "Configuring network settings..."
     
-    # Enable IP forwarding
-    echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
-    echo "net.ipv6.conf.all.forwarding=1" >> /etc/sysctl.conf
+    # Enable IP forwarding (only if not already set)
+    grep -q "^net.ipv4.ip_forward=1" /etc/sysctl.conf || echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
+    grep -q "^net.ipv6.conf.all.forwarding=1" /etc/sysctl.conf || echo "net.ipv6.conf.all.forwarding=1" >> /etc/sysctl.conf
     
     # Apply settings
     sysctl -p

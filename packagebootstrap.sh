@@ -43,9 +43,14 @@ install_languages() {
     # Python
     apt-get install -y python3 python3-pip python3-venv
     
-    # Node.js and npm
-    curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
+    # Node.js and npm - using NodeSource repository safely
+    if [ ! -f /tmp/nodesource_setup.sh ]; then
+        curl -fsSL https://deb.nodesource.com/setup_lts.x -o /tmp/nodesource_setup.sh
+        chmod +x /tmp/nodesource_setup.sh
+    fi
+    bash /tmp/nodesource_setup.sh
     apt-get install -y nodejs
+    rm -f /tmp/nodesource_setup.sh
     
     # Java
     apt-get install -y default-jdk default-jre
