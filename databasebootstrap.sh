@@ -30,7 +30,7 @@ install_sqlite() {
 
 install_db_tools() {
     dnf -y install php php-mysqlnd php-mbstring php-zip php-gd php-json php-curl
-    [ -n "$DISPLAY" ] && dnf -y install mysql-workbench
+    [ -n "$DISPLAY" ] && dnf -y install dbeaver
 }
 
 main() {
