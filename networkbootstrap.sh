@@ -12,7 +12,7 @@ install_network_tools() {
     dnf -y install \
         net-tools bind-utils traceroute tcpdump nmap nmap-ncat iptables \
         bridge-utils ethtool iftop nethogs speedtest-cli \
-        curl wget mtr whois iproute NetworkManager-wifi wireless-tools iputils hping3 socat iproute
+        curl wget mtr whois iproute NetworkManager NetworkManager-wifi iw iputils hping3 socat iproute
 }
 
 # this enables port forwarding for ipv4 and ipv6
