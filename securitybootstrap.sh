@@ -6,6 +6,8 @@ set -e
 
 dnf -y update
 
+echo "security script"
+
 # Firewall
 dnf -y install firewalld
 systemctl enable --now firewalld
