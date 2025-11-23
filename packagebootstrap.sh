@@ -21,7 +21,8 @@ npm install -g typescript
 
 # Terraform (from HashiCorp repo)
 dnf -y install dnf-plugins-core
-dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
+sudo curl -fsSL https://rpm.releases.hashicorp.com/fedora/hashicorp.repo -o /etc/yum.repos.d/hashicorp.repo
+sudo dnf update
 dnf -y install terraform
 
 # Containers & automation
