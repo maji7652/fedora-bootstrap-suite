@@ -9,7 +9,7 @@ dnf -y update
 echo "package script"
 
 # Dev tools
-dnf -y groupinstall "Development Tools"
+dnf -y group install "Development Tools"
 dnf -y install git curl wget vim nano htop tmux screen net-tools openssh-server
 
 # Languages
