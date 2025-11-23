@@ -7,7 +7,7 @@ set -e
 dnf -y update
 
 # Dev tools
-dnf -y groupinstall "Development Tools"
+dnf5 -y groupinstall "Development Tools"
 dnf -y install git curl wget vim nano htop tmux screen net-tools openssh-server
 
 # Languages
