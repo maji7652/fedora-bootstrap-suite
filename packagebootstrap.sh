@@ -16,7 +16,7 @@ dnf -y install git curl wget vim nano htop tmux screen net-tools openssh-server
 dnf -y install python3 python3-pip python3-virtualenv golang gcc-c++
 
 # Node.js (Fedora module, then add TypeScript globally)
-dnf -y module install nodejs:18
+dnf -y install nodejs
 npm install -g typescript
 
 # Terraform (from HashiCorp repo)
