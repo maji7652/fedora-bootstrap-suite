@@ -5,7 +5,7 @@ set -e
 
 [ "$EUID" -ne 0 ] && echo "Run as root or with sudo" && exit 1
 
-echo"Database script"
+echo "Database script"
 
 install_mysql() {
     dnf -y update
