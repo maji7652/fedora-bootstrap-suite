@@ -24,12 +24,12 @@ install_network_tools() {
 
 install_apache() {
     dnf -y install httpd
-    systemctl enable --now httpd
+    # systemctl enable --now httpd
 }
 
 install_nginx() {
     dnf -y install nginx
-    systemctl enable --now nginx
+   # systemctl enable --now nginx
 }
 
 main() {
