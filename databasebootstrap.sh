@@ -28,17 +28,14 @@ install_sqlite() {
     dnf -y install sqlite sqlite-devel
 }
 
+
 install_db_tools() {
     dnf -y install php php-mysqlnd php-mbstring php-zip php-gd php-json php-curl
-
-    # Add DBeaver official repo and install if running in a desktop environment
     if [ -n "$DISPLAY" ]; then
-        rpm --import https://dbeaver.io/rpm/rpm-public.gpg
-        dnf -y install https://dbeaver.io/rpm/dbeaver.repo
-        dnf -y install dbeaver-ce
+        curl -LO https://dbeaver.io/files/dbeaver-ce-latest-stable.x86_64.rpm
+        dnf -y install ./dbeaver-ce-latest-stable.x86_64.rpm
     fi
 }
-
 
 main() {
     install_mysql
